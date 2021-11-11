@@ -16,7 +16,6 @@ Absency is an interface application for employees to calculate attendance and pa
 | ReactJS  | `v17.0.2`  |
 | GO  | `v1.17.3`  |
 
-<<<<<<< HEAD
 ## Development
 
 ## Notes
@@ -25,8 +24,4 @@ Absency is an interface application for employees to calculate attendance and pa
 
 ## Documentation
 Documentation Area.
-=======
-## Features
-
-## Documentation
->>>>>>> featureB
+Data.
