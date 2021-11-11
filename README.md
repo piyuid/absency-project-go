@@ -21,3 +21,6 @@ Absency is an interface application for employees to calculate attendance and pa
 ## Notes
 
 ## Features
+
+## Documentation
+Documentation Area.
