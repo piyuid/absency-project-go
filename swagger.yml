@@ -1,0 +1,21 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: absency employee
+  description: collect absent and salary
+servers:
+  - description: Absent & Salary Apps
+    url: https://virtserver.swaggerhub.com/piyuid/absency/0.0.1
+paths :
+  /absents :
+    post :
+      summary : Input Your Attendend.
+      requestBody :
+        required : true
+        content :
+          application/json :
+            schema :
+              $ref : ''
+      responses :
+        '201' :
+          description : Created
