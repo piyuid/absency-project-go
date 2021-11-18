@@ -1,9 +1,6 @@
 package configs
 
 import (
-	"kelasd/models/news"
-	"kelasd/models/users"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
