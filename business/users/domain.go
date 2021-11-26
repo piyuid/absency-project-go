@@ -1,6 +1,7 @@
-package domain
+package users
 
 import (
+	"context"
 	"time"
 
 	"gorm.io/gorm"
@@ -18,4 +19,14 @@ type Users struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 	DeletedAt      gorm.DeletedAt `gorm:"index"`
+}
+
+type UserUsecaseInterface interface {
+	Login(domain Domain, ctx context.Context) (Domain, error)
+	GetAllUsers(ctx context.Context) ([]Domain, error)
+}
+
+type UserRepoInterface interface {
+	Login(domain Domain, ctx context.Context) (Domain, error)
+	// GetAllUsers(ctx context.Context) ([]Domain, error)
 }
