@@ -1,4 +1,4 @@
-package jabatans
+package business
 
 import (
 	"time"
