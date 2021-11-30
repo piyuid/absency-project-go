@@ -1,8 +1,12 @@
-package business
+package identity
 
-import "time"
+import (
+	"time"
 
-type Identity struct {
+	"gorm.io/gorm"
+)
+
+type Domain struct {
 	ID            uint64    `json:"id"`
 	Name          string    `json:"name"`
 	Address       string    `json:"address"`
@@ -15,4 +19,7 @@ type Identity struct {
 	HpEmployee    string    `json:"HpEmployee`
 	NameEmergency string    `json:"NameEmergency"`
 	HpEmergency   string    `json:"HpEmergency`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt `gorm:"index"`
 }
