@@ -1,4 +1,4 @@
-package business
+package department
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Department struct {
+type Domain struct {
 	ID             uint64 `json:"id"`
 	CodeDepartment uint8  `json:"CodeDepartment"`
 	NameDepartment string `json:"NameDepartment"`

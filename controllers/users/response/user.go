@@ -1,7 +1,7 @@
 package response
 
 import (
-	"keld/business/users"
+	"absency/business/users"
 	"time"
 
 	"gorm.io/gorm"
