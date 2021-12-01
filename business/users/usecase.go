@@ -21,16 +21,16 @@ func NewUsecase(userRepo UserRepoInterface, contextTimeout time.Duration) UserUs
 	}
 }
 
-func (usecase *UserUseCase) Login(domain Domain, ctx context.Context) (Domain, error) {
+func (usecase *UserUseCase) Login(domain Users, ctx context.Context) (Users, error) {
 	if domain.Email == "" {
-		return Domain{}, errors.New("Email Empty")
+		return Users{}, errors.New("Email Empty")
 	}
 	if domain.Password == "" {
-		return Domain{}, errors.New("Password Empty")
+		return Users{}, errors.New("Password Empty")
 	}
 	user, err := usecase.repo.Login(domain, ctx)
 	if err != nil {
-		return Domain{}, err
+		return Users{}, err
 	}
 
 	// user.Token = usecase.jwt.GenererateToken(user.Id)
@@ -38,8 +38,8 @@ func (usecase *UserUseCase) Login(domain Domain, ctx context.Context) (Domain, e
 	return user, nil
 }
 
-func (usecase *UserUseCase) GetAllUsers(ctx context.Context) ([]Domain, error) {
-	return []Domain{}, nil
+func (usecase *UserUseCase) GetAllUsers(ctx context.Context) ([]Users, error) {
+	return []Users{}, nil
 }
 
 // 5, 7 => 12

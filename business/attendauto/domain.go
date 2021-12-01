@@ -1,4 +1,4 @@
-package attendmanual
+package attendauto
 
 import (
 	"time"
@@ -14,7 +14,6 @@ type Domain struct {
 	TypeInOut  string    `json:"TypeInOut"`
 	InPrint    bool      `json:"InPrint"`
 	OutPrint   bool      `json:"OutPrint"`
-	Users      []ID.Users
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  gorm.DeletedAt `gorm:"index"`

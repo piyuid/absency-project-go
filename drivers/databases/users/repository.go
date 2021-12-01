@@ -1,9 +1,9 @@
 package users
 
 import (
+	"absency/business/users"
 	"context"
 	"errors"
-	"keld/business/users"
 
 	"gorm.io/gorm"
 )
@@ -18,15 +18,15 @@ func NewUserRepository(gormDb *gorm.DB) users.UserRepoInterface {
 	}
 }
 
-func (repo *UserRepository) Login(domain users.Domain, ctx context.Context) (users.Domain, error) {
+func (repo *UserRepository) Login(domain users.Users, ctx context.Context) (users.Users, error) {
 	userDb := FromDomain(domain)
 
 	err := repo.db.Where("email = ? AND password = ?", userDb.Email, userDb.Password).First(&userDb).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return users.Domain{}, errors.New("Email not found")
+			return users.Users{}, errors.New("Email not found")
 		}
-		return users.Domain{}, errors.New("Error in database")
+		return users.Users{}, errors.New("Error in database")
 	}
 	return userDb.ToDomain(), nil
 }

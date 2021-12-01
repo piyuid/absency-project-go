@@ -8,25 +8,31 @@ import (
 )
 
 type UserResponse struct {
-	Id        uint           `json:"id"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt"`
-	Email     string         `json:"email"`
-	Name      string         `json:"name"`
-	Password  string         `json:"password"`
-	Token     string         `json:"token"`
+	ID             uint64 `gorm:"primaryKey"`
+	Username       string `json:"username"`
+	Password       string `json:"password"`
+	Email          string `json:"email"`
+	Pin            uint32 `json:"pin"`
+	Previllage     uint32 `json:"previllage"`
+	PrevillageUser string `json:"previllageUser"`
+	FingerId       string `json:"fingerid"`
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      gorm.DeletedAt `gorm:"index"`
 }
 
-func FromDomain(domain users.Domain) UserResponse {
+func FromDomain(domain users.Users) UserResponse {
 	return UserResponse{
-		Id:        domain.Id,
-		CreatedAt: domain.CreatedAt,
-		UpdatedAt: domain.UpdatedAt,
-		DeletedAt: domain.DeletedAt,
-		Name:      domain.Name,
-		Email:     domain.Email,
-		Password:  domain.Password,
-		Token:     domain.Token,
+		ID:             domain.ID,
+		Username:       domain.Username,
+		Password:       domain.Password,
+		Email:          domain.Email,
+		Pin:            domain.Pin,
+		Previllage:     domain.Previllage,
+		PrevillageUser: domain.PrevillageUser,
+		FingerId:       domain.FingerId,
+		CreatedAt:      domain.CreatedAt,
+		UpdatedAt:      domain.UpdatedAt,
+		DeletedAt:      domain.DeletedAt,
 	}
 }
