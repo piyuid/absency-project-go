@@ -1,85 +1,70 @@
 package main
 
 import (
-	"net/http"
+	"absency/app/routes"
+	userUsecase "absency/business/users"
+	userController "absency/controllers/users"
+	userRepo "absency/drivers/databases/users"
+
+	_middleware "absency/app/middleware"
+
+	"absency/drivers/mysql"
+	"log"
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/driver/mysql"
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+func init() {
+	viper.SetConfigFile("app/config/config.json")
+	err := viper.ReadInConfig()
 
-type User struct {
-	ID             uint64 `gorm:"primaryKey"`
-	Username       string `json:"username" form:"username"`
-	Password       string `json:"password" form:"password"`
-	Email          string `json:"email" form:"email"`
-	Pin            uint32 `json:"pin" form:"pin"`
-	Previllage     uint32 `json:"previllage" form:"previllage"`
-	PrevillageUser string `json:"previllageuser" form:"previllageuser"`
-	FingerId       string `json:"fingerid" form:"fingerid"`
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-	DeletedAt      gorm.DeletedAt `gorm:"index"`
-}
-
-func InitConnMysql() {
-	dsn := "root:kita1234@tcp(127.0.0.1:3306)/absencydb?charset=utf8mb4&parseTime=True&loc=Local"
-	var err error
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
-	InitMigrateMysql()
+
+	if viper.GetBool(`debug`) {
+		log.Println("Service RUN on DEBUG mode")
+	}
 }
 
-func InitMigrateMysql() {
-	DB.AutoMigrate(&User{})
+func dbMigrate(db *gorm.DB) {
+	db.AutoMigrate(&userRepo.User{})
 }
 
 func main() {
-	InitConnMysql()
+	configDb := mysql.ConfigDB{
+		DB_Username: viper.GetString(`database.user`),
+		DB_Password: viper.GetString(`database.pass`),
+		DB_Host:     viper.GetString(`database.host`),
+		DB_Port:     viper.GetString(`database.port`),
+		DB_Database: viper.GetString(`database.name`),
+	}
+
+	db := configDb.InitialDb()
+	dbMigrate(db)
+
+	jwt := _middleware.ConfigJWT{
+		SecretJWT:       viper.GetString(`jwt.secret`),
+		ExpiresDuration: viper.GetInt(`jwt.expired`),
+	}
+
+	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
 	e := echo.New()
 
-	// Routing with Query Parameter
-	e.GET("/users", GetUserController)
-	e.POST("/users", CreateUserController)
+	userRepoInterface := userRepo.NewUserRepository(db)
+	userUseCaseInterface := userUsecase.NewUsecase(userRepoInterface, timeoutContext)
+	userControllerInterface := userController.NewUserController(userUseCaseInterface)
 
-	e.Start(":8000")
-}
-
-func GetUserController(c echo.Context) error {
-	var users []User
-
-	err := DB.Find(&users).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": err.Error(),
-		})
-	}
-	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-		"message": "Success",
-		"data":    users,
-	})
-}
-
-func CreateUserController(c echo.Context) error {
-	// Binding Data
-	user := User{}
-	c.Bind(&user)
-
-	err := DB.Save(&user).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": err.Error(),
-		})
+	routesInit := routes.RouteControllerList{
+		UserController: *userControllerInterface,
+		JWTConfig:      jwt.Init(),
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Berhasil Membuat Akun",
-		"user":    user,
-	})
+	routesInit.RouteRegister(e)
+	log.Fatal(e.Start(viper.GetString("server.address")))
+
 }

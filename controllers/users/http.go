@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"keld/business/users"
-	"keld/controllers"
-	"keld/controllers/users/request"
-	"keld/controllers/users/response"
+	"absency/business/users"
+	"absency/controllers"
+	"absency/controllers/users/request"
+	"absency/controllers/users/response"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
